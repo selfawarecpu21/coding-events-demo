@@ -1,12 +1,14 @@
 package org.launchcode.codingevents.models;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 //Event is responsible for organizing user-inputted information into a Java object
@@ -19,35 +21,36 @@ public class Event extends AbstractEntity{
 //    @GeneratedValue  , Now AbstractEntity takes care of this field
 //    private int id; // Primary Key for database, gives us a unique id for every Event object created
 
-   // private static int nextId = 1; no longer needed now that id has @GeneratedValue for incrementing new object ids
+   // private static int nextId = 1; no longer needed now that id has @GeneratedValue for incrementing new object ids, Also replaced using AbstractEntity
 
     @NotBlank(message = "Name is required")
     @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters")
     private String name;
 
-    @Size(max = 500, message = "Description too long!")
-    private String description;
-
-    @NotBlank(message = "Email is required")
-    @Email(message = "Invalid email. Try again.")
-    private String contactEmail;
+    @OneToOne
+    @Valid
+    @NotNull
+    private EventDetails eventDetails;
 
 
 
-    private EventType type;
+    @ManyToOne // many events in one category
+    @NotNull(message = "Category is required")
+    private EventCategory eventCategory;
+
+
+    public Event(String name, EventCategory eventCategory){
+        this.name = name;
+        this.eventCategory = eventCategory;
+//        this.id = nextId; no longer needed because of @GeneratedValue, AbstractEntity takes care of this
+//        nextId++;
+    }
+
 
     public Event(){
 
     }
 
-    public Event(String name, String description, String contactEmail, EventType type){
-        this.name = name;
-        this.description = description;
-        this.contactEmail = contactEmail;
-        this.type = type;
-//        this.id = nextId; no longer needed because of @GeneratedValue line 19
-//        nextId++;
-    }
 
     public String getName() {
         return name;
@@ -57,31 +60,23 @@ public class Event extends AbstractEntity{
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+
+    public EventCategory getEventCategory() {
+        return eventCategory;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setEventCategory(EventCategory eventCategory) {
+        this.eventCategory = eventCategory;
     }
 
 
-    public String getContactEmail() {
-        return contactEmail;
+    public EventDetails getEventDetails() {
+        return eventDetails;
     }
 
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
+    public void setEventDetails(EventDetails eventDetails) {
+        this.eventDetails = eventDetails;
     }
-
-    public EventType getType() {
-        return type;
-    }
-
-    public void setType(EventType type) {
-        this.type = type;
-    }
-
 
     @Override
     public String toString() {
