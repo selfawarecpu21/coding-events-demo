@@ -1,6 +1,7 @@
 package org.launchcode.codingevents.models;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -14,6 +15,12 @@ public class EventDetails extends AbstractEntity{
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email. Try again.")
     private String contactEmail;
+
+//    Event knows about EventDetails from OneToOne annotation on EventDetails eventDetails in Event, but EventDetails doesnt know about Event
+
+//    @OneToOne(mappedBy="eventDetails") // this code allows for EventDetails to know about Event
+//    private Event event;
+
 
     public EventDetails(@Size(max=500, message="Description too long!")String description,@Email(message = "Invalid email. Try again.")String contactEmail) {
         this.description = description;

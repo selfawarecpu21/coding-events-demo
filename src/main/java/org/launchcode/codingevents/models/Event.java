@@ -27,16 +27,23 @@ public class Event extends AbstractEntity{
     @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters")
     private String name;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)//hibernate cascade goes through removing/editing/saving Parent objects and child objects when Parent is deleted, edited,saved.
     @Valid
     @NotNull
     private EventDetails eventDetails;
 
 
 
+
     @ManyToOne // many events in one category
     @NotNull(message = "Category is required")
     private EventCategory eventCategory;
+
+
+
+    @ManyToMany
+    private final List<Tag> tags = new ArrayList<>();
+
 
 
     public Event(String name, EventCategory eventCategory){
@@ -77,6 +84,16 @@ public class Event extends AbstractEntity{
     public void setEventDetails(EventDetails eventDetails) {
         this.eventDetails = eventDetails;
     }
+
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void addTag(Tag tag){
+        this.tags.add(tag);
+    }
+
 
     @Override
     public String toString() {
